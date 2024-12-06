@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _loginpasswordController =
       TextEditingController();
   final GlobalKey<FormState> _loginformkey = GlobalKey<FormState>();
+  bool isObscurelogin = true;
 
   @override
   void initState() {
@@ -164,6 +165,8 @@ class _LoginState extends State<Login> {
                                   const Text('    Password'),
                                   const SizedBox(height: 2),
                                   TextFormField(
+                                    obscureText: isObscurelogin,
+
                                     controller: _loginpasswordController,
                                     validator: (password) {
                                       if (password == null || password.isEmpty) {
@@ -191,9 +194,16 @@ class _LoginState extends State<Login> {
                                           width: 2.0,
                                         ),
                                       ),
-                                      suffixIcon: const Icon(
-                                        Icons.lock,
-                                        color: Color.fromARGB(255, 123, 123, 123),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          isObscurelogin ? Icons.visibility_off : Icons.visibility, 
+                                          color: Color.fromARGB(255, 123, 123, 123),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            isObscurelogin = !isObscurelogin; 
+                                          });
+                                        },
                                       ),
                                     ),
                                   ),
