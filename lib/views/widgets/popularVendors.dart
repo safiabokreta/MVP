@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
+import 'package:zefeffete/views/screens/vendors/widgets/VendorDetailsMain.dart';
+import 'package:zefeffete/views/screens/vendors/views/ProfileScreen.dart';
+import 'package:zefeffete/views/screens/vendors/views/ProfileScreen.dart';
 
 class PopularVendors extends StatefulWidget {
   const PopularVendors({super.key});
@@ -11,7 +16,25 @@ class PopularVendors extends StatefulWidget {
 
 class _PopularVendorsState extends State<PopularVendors> {
   bool more = false;
-  final List<Map<String, String>> vendors = [
+  List<Map<String, dynamic>> vendors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVendors();
+  }
+
+  Future<void> _loadVendors() async {
+    final String response =
+        await rootBundle.loadString('assets/photographers.json');
+    final List<dynamic> data = json.decode(response);
+    setState(() {
+      vendors =
+          data.map((vendor) => Map<String, dynamic>.from(vendor)).toList();
+    });
+  }
+
+  final List<Map<String, String>> Vendors = [
     {
       'title': 'Disc jockey Dylia',
       'price': '23000 DA',
@@ -64,29 +87,23 @@ class _PopularVendorsState extends State<PopularVendors> {
                 visible: more,
                 child: Column(
                   children: [
-                    for (int i = 0; i < vendors.length; i++)
+                    for (int i = 0; i < Vendors.length; i++)
                       _vendorCard(
-                        vendors[i]['title']!,
-                        vendors[i]['price']!,
-                        vendors[i]['imagePath']!,
-                        vendors[i]['location']!,
-                        double.parse(vendors[i]['rating']!),
-                        vendors[i]['path']!,
+                        Vendors[i]['title']!,
+                        Vendors[i]['price']!,
+                        Vendors[i]['imagePath']!,
+                        Vendors[i]['location']!,
+                        double.parse(Vendors[i]['rating']!),
+                        Vendors[i]['path']!,
                       ),
                   ],
                 )),
             SizedBox(height: 10),
             GestureDetector(
               onTap: () {
-                if (more) {
-                  setState(() {
-                    more = false;
-                  });
-                } else {
-                  setState(() {
-                    more = true;
-                  });
-                }
+                setState(() {
+                  more = !more;
+                });
               },
               child: Center(
                   child:
@@ -100,49 +117,54 @@ class _PopularVendorsState extends State<PopularVendors> {
       String location, double rating, String path) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, path);
+        final vendor = vendors[0];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              vendorId: vendor["id"],
+            ),
+          ),
+        );
       },
       child: Card(
         elevation: 0,
         color: const Color.fromARGB(0, 246, 246, 246),
         margin: const EdgeInsets.only(bottom: 16),
         child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage(imagePath),
-              radius: 30,
-            ),
-            title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: GoogleFonts.raleway(),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    price,
-                    style: GoogleFonts.raleway(
-                        color: Color.fromARGB(255, 247, 117, 156),
-                        fontWeight: FontWeight.w500),
-                  ),
-                ]),
-            subtitle: Row(
-              children: [
-                const Icon(Icons.location_on, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(location, style: const TextStyle(color: Colors.grey)),
-                const SizedBox(width: 12),
-                const Icon(Icons.star, size: 14, color: Colors.orange),
-                const SizedBox(width: 4),
-                Text(
-                  rating.toStringAsFixed(1),
-                  style: GoogleFonts.raleway(color: Colors.grey),
+          leading: CircleAvatar(
+            backgroundImage: AssetImage(imagePath),
+            radius: 30,
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: GoogleFonts.raleway()),
+              const SizedBox(height: 2),
+              Text(
+                price,
+                style: GoogleFonts.raleway(
+                  color: const Color.fromARGB(255, 247, 117, 156),
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
-            )),
+              ),
+            ],
+          ),
+          subtitle: Row(
+            children: [
+              const Icon(Icons.location_on, size: 14, color: Colors.grey),
+              const SizedBox(width: 4),
+              Text(location, style: const TextStyle(color: Colors.grey)),
+              const SizedBox(width: 12),
+              const Icon(Icons.star, size: 14, color: Colors.orange),
+              const SizedBox(width: 4),
+              Text(
+                rating.toStringAsFixed(1),
+                style: GoogleFonts.raleway(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
