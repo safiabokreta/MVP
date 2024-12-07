@@ -172,7 +172,7 @@ class _ChangepasswordState extends State<Changepassword> {
                                 const Text('    Password'),
                                 const SizedBox(height: 2),
                                 TextFormField(
-                                  obscureText: true,
+                                  obscureText: isObscure,
                                   controller: changepasswordController,
                                   validator: (password) {
                                     if (password == null || password.isEmpty) {
@@ -247,7 +247,7 @@ class _ChangepasswordState extends State<Changepassword> {
                                      suffixIcon: IconButton(
                                         icon: Icon(
                                           isObscure ? Icons.visibility_off : Icons.visibility, 
-                                          color: Color.fromARGB(255, 123, 123, 123),
+                                          color: const Color.fromARGB(255, 123, 123, 123),
                                         ),
                                         onPressed: () {
                                           setState(() {
@@ -289,7 +289,7 @@ class _ChangepasswordState extends State<Changepassword> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 30),
+                                const SizedBox(height: 50),
                               ],
                             ),
                           ),

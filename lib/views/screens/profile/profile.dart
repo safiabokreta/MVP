@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:zefeffete/views/screens/auth/privacypolicy.dart';
 import 'package:zefeffete/views/screens/profile/editprofile.dart';
 import 'package:zefeffete/views/screens/profile/editprofilevendor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:math' as math;
 
@@ -17,22 +18,26 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
+Future<String?> getEmail() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('Email'); // Returns null if 'Email' is not set
+}
+ 
 class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = Colors.pink; // Match your theme
+    Paint paint = Paint()..color = Colors.pink; 
 
-    // Draw a downward-facing arc, with only the central part visible
     canvas.drawArc(
       Rect.fromLTWH(
-        -30, // Start at the left edge
-        -size.height, // Shift the arc upward to crop the endpoints
-        size.width + 60, // Full width of the screen
-        size.height * 2, // Increase the height to stretch the arc further
+        -30, 
+        -size.height,
+        size.width + 60, 
+        size.height * 2, 
       ),
-      0, // Start angle (flat line at the top)
-      math.pi, // Sweep angle (half-circle downward)
-      false, // No center fill
+      0, 
+      math.pi, 
+      false, 
       paint,
     );
   }
@@ -42,11 +47,29 @@ class MyPainter extends CustomPainter {
 }
 
 class _ProfileState extends State<Profile> {
+ String? currentUserEmail;
+
+  @override
+  void initState() {
+    super.initState();
+    loadEmail(); 
+  }
+
+  Future<void> loadEmail() async {
+    final email = await getEmail();
+    setState(() {
+      currentUserEmail = email;
+    });
+  }
+
+  Future<String?> getEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('Email'); 
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String currentUserEmail =
-        ModalRoute.of(context)?.settings.arguments as String? ??
-            'unknown@domain.com';
+
     // Retrieve the user's data from the map.
     final userData = users[currentUserEmail] ?? {};
     bool about = userData['role'] != 'weddingowner';

@@ -156,7 +156,7 @@ class _SignupState extends State<Signup> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const SizedBox(height: 15),
+                                              const SizedBox(height: 10),
                                               const Text('    Email Address'),
                                               const SizedBox(height: 2),
                                               TextFormField(
@@ -212,7 +212,7 @@ class _SignupState extends State<Signup> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 20),
+                                              const SizedBox(height: 10),
                                               const Text('    Password'),
                                               const SizedBox(height: 2),
                                               TextFormField(
@@ -265,7 +265,7 @@ class _SignupState extends State<Signup> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 20),
+                                              const SizedBox(height: 10),
                                               const Text('    Confirm Password'),
                                               const SizedBox(height: 2),
                                               TextFormField(
@@ -322,7 +322,7 @@ class _SignupState extends State<Signup> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 20),
+                                              const SizedBox(height: 10),
                                               const Text(
                                                   '    Are you a vendor or a venue owner?'),
                                               const SizedBox(height: 2),
@@ -481,7 +481,7 @@ class _SignupState extends State<Signup> {
                                                         fontSize: 12),
                                                   ),
                                                 ),
-                                              const SizedBox(height: 20),
+                                              const SizedBox(height: 10),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,

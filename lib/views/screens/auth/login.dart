@@ -35,15 +35,17 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> _setLoginStatus(bool status) async {
+  Future<void> _setLoginStatus(bool status, String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', status);
+    await prefs.setString('Email', email);
+
   }
 
   /// Perform login validation
   void _login(String email, String password) async {
     if (_loginformkey.currentState?.validate() ?? false) {
-      await _setLoginStatus(true);
+      await _setLoginStatus(true , email);
       if (mounted) {
         Navigator.pushNamed(
           context,
@@ -52,7 +54,7 @@ class _LoginState extends State<Login> {
         );
       }
     } else {
-      await _setLoginStatus(false);
+      await _setLoginStatus(false, 'none');
     }
   }
 
@@ -60,7 +62,8 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-      SingleChildScrollView(child: 
+      SingleChildScrollView(
+        child: 
       Stack(
         children: [
           Column(
@@ -197,7 +200,7 @@ class _LoginState extends State<Login> {
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           isObscurelogin ? Icons.visibility_off : Icons.visibility, 
-                                          color: Color.fromARGB(255, 123, 123, 123),
+                                          color: const Color.fromARGB(255, 123, 123, 123),
                                         ),
                                         onPressed: () {
                                           setState(() {
