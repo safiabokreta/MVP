@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
+import 'package:zefeffete/views/screens/venues/VenueDetailPage.dart';
 
 class BestVenues extends StatefulWidget {
   const BestVenues({super.key});
@@ -67,7 +68,25 @@ class _BestVenuesState extends State<BestVenues> {
       String distance, String path) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, path);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VenueDetailPage(
+              venueData: {
+                'name': title,
+                'location': location,
+                'imageUrl':
+                    "https://www.stuckonyoufavours.co.za/cdn/shop/articles/MilkandHoneyPhotography-78.jpg?v=1653994203&width=1100",
+                'phone': '+213-123-4567',
+                'rating': {
+                  'stars': 4,
+                  'halfStar': true,
+                  'reviews': 120,
+                },
+              },
+            ),
+          ),
+        );
       },
       child: Container(
         width: 200,
