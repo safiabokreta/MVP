@@ -20,6 +20,7 @@ class _SignupState extends State<Signup> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _signupFormKey = GlobalKey<FormState>();
+    bool isObscuresignup = true;
 
   void addUser(String email, String password) {
     // Check if the email already exists
@@ -96,7 +97,7 @@ class _SignupState extends State<Signup> {
                   child: Text(
                     'Hello!',
                     style: GoogleFonts.jomhuria(
-                      fontSize: 87,
+                      fontSize: 50,
                       fontWeight: FontWeight.w500,
                       color: const Color.fromARGB(255, 234, 186, 210),
                     ),
@@ -215,6 +216,7 @@ class _SignupState extends State<Signup> {
                                               const Text('    Password'),
                                               const SizedBox(height: 2),
                                               TextFormField(
+                                                obscureText: true,
                                                 controller: _passwordController,
                                                 validator: (password) {
                                                   if (password == null ||
@@ -267,6 +269,7 @@ class _SignupState extends State<Signup> {
                                               const Text('    Confirm Password'),
                                               const SizedBox(height: 2),
                                               TextFormField(
+                                                obscureText: isObscuresignup,
                                                 controller:
                                                     _confirmPasswordController,
                                                 validator: (password) {
@@ -306,14 +309,16 @@ class _SignupState extends State<Signup> {
                                                       width: 2.0,
                                                     ),
                                                   ),
-                                                  suffixIcon: const Icon(
-                                                    Icons
-                                                        .lock, // Use the email icon
-                                                    color: Color.fromARGB(
-                                                        255,
-                                                        123,
-                                                        123,
-                                                        123), // Set the icon color
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(
+                                                      isObscuresignup ? Icons.visibility_off : Icons.visibility, 
+                                                      color: Color.fromARGB(255, 123, 123, 123),
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        isObscuresignup = !isObscuresignup; 
+                                                      });
+                                                    },
                                                   ),
                                                 ),
                                               ),
@@ -545,6 +550,8 @@ class _SignupState extends State<Signup> {
                                                       ),
                                                     ),
                                                   ),
+                                              const SizedBox(height: 25),
+
                                                 ],
                                               ),
                                             ],

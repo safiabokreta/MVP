@@ -20,6 +20,7 @@ class _ChangepasswordState extends State<Changepassword> {
   final TextEditingController confirmChangepasswordController =
       TextEditingController();
   final GlobalKey<FormState> _changePasswordformkey = GlobalKey<FormState>();
+    bool isObscure = true;
 
   @override
   void initState() {
@@ -171,6 +172,7 @@ class _ChangepasswordState extends State<Changepassword> {
                                 const Text('    Password'),
                                 const SizedBox(height: 2),
                                 TextFormField(
+                                  obscureText: true,
                                   controller: changepasswordController,
                                   validator: (password) {
                                     if (password == null || password.isEmpty) {
@@ -205,12 +207,14 @@ class _ChangepasswordState extends State<Changepassword> {
                                           255, 123, 123, 123),
                                     ),
                                   ),
+
                                 ),
                                 const SizedBox(height: 30),
                                 // Password input
                                 const Text('    Confirm Password'),
                                 const SizedBox(height: 2),
                                 TextFormField(
+                                  obscureText: isObscure,
                                   controller: confirmChangepasswordController,
                                   validator: (password) {
                                     if (password == null || password.isEmpty) {
@@ -240,11 +244,17 @@ class _ChangepasswordState extends State<Changepassword> {
                                         width: 2.0,
                                       ),
                                     ),
-                                    suffixIcon: const Icon(
-                                      Icons.lock,
-                                      color: Color.fromARGB(
-                                          255, 123, 123, 123),
-                                    ),
+                                     suffixIcon: IconButton(
+                                        icon: Icon(
+                                          isObscure ? Icons.visibility_off : Icons.visibility, 
+                                          color: Color.fromARGB(255, 123, 123, 123),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            isObscure = !isObscure; 
+                                          });
+                                        },
+                                      ),
                                   ),
                                 ),
                                 const SizedBox(height: 40),
