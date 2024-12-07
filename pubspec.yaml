@@ -8,8 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  smooth_page_indicator: ^1.0.0+2
-  google_fonts: ^6.0.0
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.3
+  smooth_page_indicator: ^1.2.0+3
 
 
 dev_dependencies:
@@ -20,13 +21,22 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/profile.jpg
-    - assets/vendor1.jpg
-    - assets/vendor2.jpg
-    - assets/vendor3.jpg
-    - assets/venue1.jpg
-    - assets/venue2.jpg
-    - assets/venue3.jpg
-    - assets/startingPage1.jpg
-    - assets/startingPage2.jpg
-    - assets/startingPage3.jpg
+    - assets/images/profile.jpg
+    - assets/images/vendor1.jpg
+    - assets/images/vendor2.jpg
+    - assets/images/vendor3.jpg
+    - assets/images/venue1.jpg
+    - assets/images/venue2.jpg
+    - assets/images/venue3.jpg
+    - assets/images/startingPage1.jpg
+    - assets/images/startingPage2.jpg
+    - assets/images/startingPage3.jpg
+    - assets/wilayas.json
+    - assets/vendor_data.json
+    - assets/photographers.json
+    - assets/venues.json
+    - assets/images/flowers1.png
+    - assets/images/flowers2.png
+    - assets/images/aliance.png
+    - assets/images/profilepic.png
+    - assets/images/algeria_flag.jpg

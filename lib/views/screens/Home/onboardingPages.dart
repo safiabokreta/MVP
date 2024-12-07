@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
 
 class OnboardingPages extends StatefulWidget {
   const OnboardingPages({super.key});
@@ -33,7 +33,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                   children: [
                     Positioned.fill(
                       child: Image.asset(
-                        "assets/startingPage1.jpg",
+                        "assets/images/startingPage1.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -43,8 +43,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                       bottom: 130,
                       child: Text(
                         '''Your dream day starts here.\nFind the perfect venue,\n tailored to your vision.''',
-                        style: GoogleFonts.raleway(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+                        style: OnboardingPagesMessages,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -57,7 +56,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                   children: [
                     Positioned.fill(
                       child: Image.asset(
-                        "assets/startingPage2.jpg",
+                        "assets/images/startingPage2.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -67,8 +66,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                       bottom: 130,
                       child: Text(
                         '''Create the ultimate celebration with\nhandpicked DJs, photographers, and\nchefs.''',
-                        style: GoogleFonts.raleway(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+                        style: OnboardingPagesMessages,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -81,7 +79,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                   children: [
                     Positioned.fill(
                       child: Image.asset(
-                        "assets/startingPage3.jpg",
+                        "assets/images/startingPage3.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -91,8 +89,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                       bottom: 130,
                       child: Text(
                         '''Enjoy every moment.\nWe’ll help you find everything you need\nfor the big day.''',
-                        style: GoogleFonts.raleway(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+                        style: OnboardingPagesMessages,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -112,7 +109,7 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pushNamed(context, '/home0');
                         },
                         child: const Text(
                           "GET STARTED",

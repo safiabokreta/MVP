@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
 
 class PopularVendors extends StatefulWidget {
   const PopularVendors({super.key});
@@ -14,7 +15,7 @@ class _PopularVendorsState extends State<PopularVendors> {
     {
       'title': 'Disc jockey Dylia',
       'price': '23000 DA',
-      'imagePath': 'assets/vendor3.jpg',
+      'imagePath': 'assets/images/vendor3.jpg',
       'location': 'Algiers',
       'rating': '4.5',
       'path': 'dummypath'
@@ -22,7 +23,7 @@ class _PopularVendorsState extends State<PopularVendors> {
     {
       'title': 'Wedding photographer Maissa',
       'price': '20000 DA',
-      'imagePath': 'assets/vendor2.jpg',
+      'imagePath': 'assets/images/vendor2.jpg',
       'location': 'Algiers',
       'rating': '4.7',
       'path': 'dummypath'
@@ -30,7 +31,7 @@ class _PopularVendorsState extends State<PopularVendors> {
     {
       'title': 'Traiteur Aissa',
       'price': '33000 DA',
-      'imagePath': 'assets/vendor1.jpg',
+      'imagePath': 'assets/images/vendor1.jpg',
       'location': 'Algiers',
       'rating': '4.6',
       'path': 'dummypath'
@@ -46,19 +47,18 @@ class _PopularVendorsState extends State<PopularVendors> {
           children: [
             Text(
               'Popular vendors',
-              style: GoogleFonts.poppins(
-                  fontSize: 18, fontWeight: FontWeight.bold),
+              style: bestVendor,
             ),
             const SizedBox(height: 16),
             Column(children: [
-              _vendorCard('Disc jockey Dylia', '23000 DA', 'assets/vendor1.jpg',
-                  'Algiers', 4.5, 'dummypath'),
+              _vendorCard('Disc jockey Dylia', '23000 DA',
+                  'assets/images/vendor1.jpg', 'Algiers', 4.5, 'dummypath'),
               _vendorCard('Wedding photographer Maissa', '20000 DA',
-                  'assets/vendor2.jpg', 'Algiers', 4.8, 'dummypath'),
-              _vendorCard('Traiteur Aissa', '30000 DA', 'assets/vendor3.jpg',
-                  'Algiers', 4.6, 'dummypath'),
-              _vendorCard('Traiteur Aissa', '30000 DA', 'assets/vendor1.jpg',
-                  'Algiers', 4.5, 'dummypath'),
+                  'assets/images/vendor2.jpg', 'Algiers', 4.8, 'dummypath'),
+              _vendorCard('Traiteur Aissa', '30000 DA',
+                  'assets/images/vendor3.jpg', 'Algiers', 4.6, 'dummypath'),
+              _vendorCard('Traiteur Aissa', '30000 DA',
+                  'assets/images/vendor1.jpg', 'Algiers', 4.5, 'dummypath'),
             ]),
             Visibility(
                 visible: more,
@@ -89,8 +89,8 @@ class _PopularVendorsState extends State<PopularVendors> {
                 }
               },
               child: Center(
-                  child: Text((!more) ? "See more" : 'See less',
-                      style: GoogleFonts.raleway(color: Colors.grey))),
+                  child:
+                      Text((!more) ? "See more" : 'See less', style: seeMore)),
             )
           ],
         ));
@@ -125,7 +125,7 @@ class _PopularVendorsState extends State<PopularVendors> {
                   Text(
                     price,
                     style: GoogleFonts.raleway(
-                        color: Color.fromARGB(255, 10, 142, 217),
+                        color: Color.fromARGB(255, 247, 117, 156),
                         fontWeight: FontWeight.w500),
                   ),
                 ]),

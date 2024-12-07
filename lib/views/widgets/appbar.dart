@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
 
 class Appbar extends StatelessWidget {
   const Appbar({super.key});
@@ -14,21 +14,17 @@ class Appbar extends StatelessWidget {
           RichText(
             text: TextSpan(
               text: 'Welcome, ',
-              style: GoogleFonts.raleway(fontSize: 18, color: Colors.black),
+              style: welcomeMessage,
               children: [
                 TextSpan(
                   text: 'Wafaa',
-                  style: GoogleFonts.raleway(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: const Color.fromARGB(255, 247, 117, 156),
-                  ),
+                  style: appName,
                 ),
               ],
             ),
           ),
           const CircleAvatar(
-            backgroundImage: AssetImage('assets/profile.jpg'),
+            backgroundImage: AssetImage('assets/images/profile.jpg'),
             radius: 20,
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zefeffete/views/themes/simpleStyle.dart/homeStyle.dart';
 
 class BestVenues extends StatefulWidget {
   const BestVenues({super.key});
@@ -13,21 +14,21 @@ class _BestVenuesState extends State<BestVenues> {
     {
       'title': 'Dreamsville House',
       'location': 'Algiers',
-      'imagePath': 'assets/venue1.jpg',
+      'imagePath': 'assets/images/venue1.jpg',
       'distance': '1.8 km',
       'path': '/dummypath'
     },
     {
       'title': 'Ascot House',
       'location': 'Algiers',
-      'imagePath': 'assets/venue2.jpg',
+      'imagePath': 'assets/images/venue2.jpg',
       'distance': '2.5 km',
       'path': '/dummypath'
     },
     {
       'title': 'Golden Plaza',
       'location': 'Algiers',
-      'imagePath': 'assets/venue3.jpg',
+      'imagePath': 'assets/images/venue3.jpg',
       'distance': '3.0 km',
       'path': '/dummypath'
     },
@@ -41,8 +42,7 @@ class _BestVenuesState extends State<BestVenues> {
           margin: EdgeInsets.only(left: 10),
           child: Text(
             '''Best venues\nnear from you''',
-            style:
-                GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+            style: bestVenues,
           ),
         ),
         const SizedBox(height: 16),
