@@ -280,7 +280,7 @@ class _EditprofileState extends State<Editprofile> {
                   children: [
                     // Year Dropdown
                     SizedBox(
-                      width: 130,
+                      width: 90,
                       child: DropdownButtonFormField<String>(
                         value: selectedYear,
                         decoration: InputDecoration(
@@ -351,7 +351,7 @@ class _EditprofileState extends State<Editprofile> {
 
                     // Day Dropdown
                     SizedBox(
-                      width: 90,
+                      width: 70,
                       child: DropdownButtonFormField<String>(
                         value: selectedDay,
                         decoration: InputDecoration(
