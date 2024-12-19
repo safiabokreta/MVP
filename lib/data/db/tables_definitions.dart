@@ -93,6 +93,7 @@ final List<String> createTableScripts = [
       pricing_details TEXT,
       theme TEXT,
       activated BOOLEAN DEFAULT 0,
+      category Text,
       FOREIGN KEY (email) REFERENCES account (email),
       CHECK (price_min <= price_max)
   );
