@@ -8,9 +8,9 @@ class VendorModel extends Vendor {
     String? wilaya,
     String? gender,
     String? about,
-    required double priceMin,
-    required double priceMax,
-    required String pricingDetails,
+    double? priceMin,
+    double? priceMax,
+    String? pricingDetails,
     String? theme,
     bool activated = false,
   }) : super(

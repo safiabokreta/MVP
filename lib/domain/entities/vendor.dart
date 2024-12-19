@@ -7,9 +7,9 @@ class Vendor {
   final String? wilaya;
   final String? gender;
   final String? about;
-  final double priceMin;
-  final double priceMax;
-  final String pricingDetails;
+  final double? priceMin;
+  final double? priceMax;
+  final String? pricingDetails;
   final String? theme;
   final bool activated;
 
