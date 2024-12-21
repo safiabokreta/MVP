@@ -2,14 +2,10 @@ import 'package:zefeffete/domain/entities/venueOwner.dart';
 
 class VenueOwnerModel extends VenueOwner {
   VenueOwnerModel({
-    required String email,
-    String? gender,
-    String? phoneNumber,
-  }) : super(
-          email: email,
-          gender: gender,
-          phoneNumber: phoneNumber,
-        );
+    required super.email,
+    super.gender,
+    super.phoneNumber,
+  });
 
   // Convert Model to Entity
   VenueOwner toEntity() {

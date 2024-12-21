@@ -14,9 +14,12 @@ class SharedPreferencesManager {
   static const String _isLoggedInKey = 'isLoggedIn';
   static const String _emailKey = 'Email';
   static const String _roleKey = 'Role';
-  static const String _usernameKey = 'Username'; // Added username key
+  static const String _usernameKey = 'Username';
+  static const String _profileImageKey = 'ProfileImage';
+  static const String _activatedKey =
+      'NotActivated'; // Corrected to be a key for activation
 
-  /// Save login status, email, role, and username
+  /// Save login status, email, role, username
   Future<void> setLoginStatus(
       bool status, String email, String role, String username) async {
     final prefs = await SharedPreferences.getInstance();
@@ -27,7 +30,7 @@ class SharedPreferencesManager {
   }
 
   // Check login status
-  Future<bool> _checkLoginStatus() async {
+  Future<bool> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_isLoggedInKey) ?? false;
   }
@@ -48,6 +51,35 @@ class SharedPreferencesManager {
   Future<String?> getUsername() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_usernameKey);
+  }
+
+  Future<bool> setUsername(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setString(_usernameKey, username);
+  }
+
+  Future<String?> getActivated() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_activatedKey); // Default to false if null
+  }
+
+  /// Set activation status
+  Future<void> setActivated(String activation) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        _activatedKey, activation); // Save the activation status
+  }
+
+  /// Save profile image (base64 encoded string or image URL)
+  Future<void> setProfileImage(String base64Image) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileImageKey, base64Image);
+  }
+
+  /// Get profile image (base64 encoded string or image URL)
+  Future<String?> getProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_profileImageKey);
   }
 
   /// Clear all saved preferences

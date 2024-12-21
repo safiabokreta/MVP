@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zefeffete/data/models/guest_model.dart';
+import 'package:zefeffete/cubits/guests_cubit.dart';
+import 'package:zefeffete/data/datasources/sharedprefs/sharedpreferencesManager.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class AddGuest extends StatefulWidget {
@@ -9,18 +13,16 @@ class AddGuest extends StatefulWidget {
 }
 
 class _AddGuestState extends State<AddGuest> {
-  // State variables for text inputs
   final TextEditingController nameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
 
-  // State variables for toggle buttons
-  String gender = "Male"; // Male or Female
-  String side = "Groom's side"; // Groom's side or Bride's side
-
-  // State variables for dropdown selections
+  String gender = "Male";
+  String side = "G";
   int numWomen = 0;
   int numMen = 0;
   int numKids = 0;
+
+  bool isNameValid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,6 @@ class _AddGuestState extends State<AddGuest> {
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
-            //fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
@@ -50,9 +51,7 @@ class _AddGuestState extends State<AddGuest> {
               Icons.check,
               color: Colors.black,
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: _addNewGuest,
           ),
         ],
       ),
@@ -62,178 +61,101 @@ class _AddGuestState extends State<AddGuest> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 30,
-              ),
-              // Name and Last Name Inputs
+              const SizedBox(height: 30),
+
+              // Name and Surname Input Fields
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: "Name",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 12.0),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 12.0),
-                      ),
+                        const SizedBox(height: 4),
+                        Visibility(
+                          visible: !isNameValid,
+                          child: const Text(
+                            "Name cannot be empty",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "Surname",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: lastNameController,
+                          decoration: InputDecoration(
+                            labelText: "Surname",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 12.0),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 12.0),
-                      ),
+                        const SizedBox(height: 4),
+                        Visibility(
+                          visible: !isNameValid,
+                          child: const SizedBox(height: 16),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
 
-              // Gender Selection
+              // Gender and Side Selection
               Row(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: gender == "Male"
-                            ? AppColors.primary2
-                            : Colors.white,
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 151, 142, 142)),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(7),
-                            bottomLeft: Radius.circular(7),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          gender = "Male";
-                        });
-                      },
-                      child: Text(
-                        "Male",
-                        style: TextStyle(
-                          color: gender == "Male"
-                              ? Colors.white
-                              : const Color.fromARGB(255, 151, 142, 142),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: gender == "Female"
-                            ? AppColors.primary2
-                            : Colors.white,
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 151, 142, 142)),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(7),
-                            bottomRight: Radius.circular(7),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          gender = "Female";
-                        });
-                      },
-                      child: Text(
-                        "Female",
-                        style: TextStyle(
-                          color: gender == "Female"
-                              ? Colors.white
-                              : const Color.fromARGB(255, 151, 142, 142),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildToggleButton("Male", gender == "Male", () {
+                    setState(() {
+                      gender = "Male";
+                    });
+                  }),
+                  _buildToggleButton("Female", gender == "Female", () {
+                    setState(() {
+                      gender = "Female";
+                    });
+                  }),
                 ],
               ),
               const SizedBox(height: 16),
-
-              // Side Selection
               Row(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: side == "Groom's side"
-                            ? AppColors.primary2
-                            : Colors.white,
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 151, 142, 142)),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(7),
-                            bottomLeft: Radius.circular(7),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          side = "Groom's side";
-                        });
-                      },
-                      child: Text(
-                        "Groom's side",
-                        style: TextStyle(
-                          color: side == "Groom's side"
-                              ? Colors.white
-                              : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: side == "Bride's side"
-                            ? AppColors.primary2
-                            : Colors.white,
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 151, 142, 142)),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(7),
-                            bottomRight: Radius.circular(7),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          side = "Bride's side";
-                        });
-                      },
-                      child: Text(
-                        "Bride's side",
-                        style: TextStyle(
-                          color: side == "Bride's side"
-                              ? Colors.white
-                              : const Color.fromARGB(255, 151, 142, 142),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildToggleButton("Groom's side", side == "G", () {
+                    setState(() {
+                      side = "G";
+                    });
+                  }),
+                  _buildToggleButton("Bride's side", side == "B", () {
+                    setState(() {
+                      side = "B";
+                    });
+                  }),
                 ],
               ),
               const SizedBox(height: 40),
 
-              // Companions Section
               const Text(
                 "Companions:",
                 style: TextStyle(
@@ -244,74 +166,102 @@ class _AddGuestState extends State<AddGuest> {
               const SizedBox(height: 35),
 
               // Dropdowns for Number of Women, Men, and Kids
-              DropdownButtonFormField<int>(
-                value: numWomen,
-                items: List.generate(11, (index) {
-                  return DropdownMenuItem(
-                    value: index,
-                    child: Text(index.toString()),
-                  );
-                }),
-                onChanged: (value) {
-                  setState(() {
-                    numWomen = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: "Number of women",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-              ),
+              _buildDropdown("Number of women", numWomen, (value) {
+                setState(() {
+                  numWomen = value!;
+                });
+              }),
               const SizedBox(height: 32),
-
-              DropdownButtonFormField<int>(
-                value: numMen,
-                items: List.generate(11, (index) {
-                  return DropdownMenuItem(
-                    value: index,
-                    child: Text(index.toString()),
-                  );
-                }),
-                onChanged: (value) {
-                  setState(() {
-                    numMen = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: "Number of men",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-              ),
+              _buildDropdown("Number of men", numMen, (value) {
+                setState(() {
+                  numMen = value!;
+                });
+              }),
               const SizedBox(height: 32),
-
-              DropdownButtonFormField<int>(
-                value: numKids,
-                items: List.generate(11, (index) {
-                  return DropdownMenuItem(
-                    value: index,
-                    child: Text(index.toString()),
-                  );
-                }),
-                onChanged: (value) {
-                  setState(() {
-                    numKids = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: "Number of kids",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-              ),
+              _buildDropdown("Number of kids", numKids, (value) {
+                setState(() {
+                  numKids = value!;
+                });
+              }),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildToggleButton(
+      String label, bool isSelected, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected ? AppColors.primary2 : Colors.white,
+          side: const BorderSide(color: Color.fromARGB(255, 151, 142, 142)),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : const Color.fromARGB(255, 151, 142, 142),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(
+      String label, int currentValue, ValueChanged<int?> onChanged) {
+    return DropdownButtonFormField<int>(
+      value: currentValue,
+      items: List.generate(11, (index) {
+        return DropdownMenuItem(
+          value: index,
+          child: Text(index.toString()),
+        );
+      }),
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7),
+        ),
+      ),
+    );
+  }
+
+  void _addNewGuest() async {
+    final weddingOwnerEmail = await SharedPreferencesManager().getEmail();
+    if (nameController.text.trim().isEmpty) {
+      setState(() {
+        isNameValid = false;
+      });
+      return;
+    }
+    setState(() {
+      isNameValid = true;
+    });
+
+    if (weddingOwnerEmail != null) {
+      final concatenatedName =
+          '${nameController.text.trim()} ${lastNameController.text.trim()}';
+
+      final newGuest = GuestModel(
+        weddingOwnerEmail: weddingOwnerEmail,
+        name: concatenatedName,
+        gender: gender,
+        side: side,
+        numWomen: numWomen,
+        numMen: numMen,
+        numKids: numKids,
+      );
+
+      BlocProvider.of<GuestCubit>(context).addGuest(newGuest.toMap());
+      Navigator.pop(context);
+    }
   }
 }

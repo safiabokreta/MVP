@@ -7,7 +7,22 @@ import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart
 import 'package:zefeffete/presentation/views/widgets/bottomNavigationBar.dart';
 
 class VendorsPage extends StatelessWidget {
-  const VendorsPage({super.key});
+  final bool useCustomFilter;
+  final double? minPrice;
+  final double? maxPrice;
+  final String? gender;
+  final String? rating;
+  final Map<String, List<String>>? locations;
+
+  const VendorsPage({
+    super.key,
+    this.useCustomFilter = false,
+    this.minPrice,
+    this.maxPrice,
+    this.gender,
+    this.rating,
+    this.locations,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +35,6 @@ class VendorsPage extends StatelessWidget {
             "Vendors",
             style: TextStyle(
               color: Colors.black,
-              //fontWeight: FontWeight.bold,
               fontSize: 24,
             ),
           ),
@@ -42,15 +56,22 @@ class VendorsPage extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            PhotographersPage(),
+            PhotographersPage(
+              useCustomFilter: useCustomFilter,
+              minPrice: minPrice,
+              maxPrice: maxPrice,
+              gender: gender,
+              rating: rating,
+              locations: locations,
+            ),
             CaterersPage(),
             DJsPage(),
             FloristsPage(),
           ],
         ),
-        bottomNavigationBar: BottomNavBar(
+        bottomNavigationBar: const BottomNavBar(
           currentRoute: '/vendors',
         ),
       ),

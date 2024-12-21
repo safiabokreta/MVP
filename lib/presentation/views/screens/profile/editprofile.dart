@@ -207,40 +207,7 @@ class _EditprofileState extends State<Editprofile> {
                     ),
                     const SizedBox(width: 26),
 
-                    // Gender Dropdown
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 181, 88, 139),
-                              width: 2.0,
-                            ),
-                          ),
-                          labelText: 'Gender',
-                          labelStyle: GoogleFonts.poppins(
-                            color: const Color.fromARGB(255, 103, 102, 103),
-                          ),
-                          filled: true,
-                          fillColor: const Color.fromARGB(92, 255, 207, 247),
-                        ),
-                        items: const [
-                          DropdownMenuItem(value: 'Male', child: Text('Male')),
-                          DropdownMenuItem(
-                              value: 'Female', child: Text('Female')),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            selectedGender = value ?? 'none';
-                          });
-                        },
-                      ),
-                    ),
-                  ],
+                   ],
                 ),
                 const SizedBox(height: 26),
 

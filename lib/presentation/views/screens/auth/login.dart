@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zefeffete/data_to_be_deleted/users.dart';
+import 'package:zefeffete/data/datasources/account_ds.dart';
+import 'package:zefeffete/data/repositories/account_rep_impl.dart';
+import 'package:zefeffete/domain/usecases/account/account_usecases.dart';
+import 'package:zefeffete/presentation/controllers/user_account_controller.dart';
 import 'package:zefeffete/presentation/views/screens/auth/signup.dart';
 import 'package:zefeffete/presentation/views/screens/profile/profile.dart';
 import 'package:zefeffete/presentation/views/screens/auth/changepassword.dart';
@@ -21,40 +23,67 @@ class _LoginState extends State<Login> {
       TextEditingController();
   final GlobalKey<FormState> _loginformkey = GlobalKey<FormState>();
   bool isObscurelogin = true;
+  bool _isLoading = false;
+  late final AccountController _loginController;
 
   @override
   void initState() {
     super.initState();
-    _initializeLoginStatus();
+    print("init state here");
+    final accountRepository = AccountRepositoryImpl(AccountDataSource());
+    final loginUseCase = AccountUserCases(accountRepository);
+    _loginController = AccountController(loginUseCase);
   }
 
-  Future<void> _initializeLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('isLoggedIn')) {
-      await prefs.setBool('isLoggedIn', false);
-    }
-  }
-
-  Future<void> _setLoginStatus(bool status, String email) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', status);
-    await prefs.setString('Email', email);
-  }
-
-  /// Perform login validation
-  void _login(String email, String password) async {
+  // Perform login validation
+  void _login() async {
+    print("Login form validation triggered");
     if (_loginformkey.currentState?.validate() ?? false) {
-      await _setLoginStatus(true, email);
-      if (mounted) {
-        Navigator.pushNamed(
-          context,
-          Profile.pageroute,
-          arguments: email,
-        );
+      print(
+          "Login form: Attempting to login with email: ${_loginemailController.text} and password: ${_loginpasswordController.text}");
+
+      setState(() {
+        _isLoading = true; // Show loading indicator while processing login
+      });
+
+      String result = await _loginController.login(
+        _loginemailController.text,
+        _loginpasswordController.text,
+      );
+      print("Login result: $result");
+      setState(() {
+        _isLoading = false; // Stop the loading indicator
+      });
+
+      if (result == "Login successful") {
+        // Navigate to Profile page on success
+        Navigator.pushNamed(context, Profile.pageroute);
+      } else {
+        // Show error dialog on failure
+        _showErrorDialog(result);
       }
-    } else {
-      await _setLoginStatus(false, 'none');
     }
+  }
+
+  // Function to show an error dialog
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Login Failed'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -139,9 +168,7 @@ class _LoginState extends State<Login> {
                                         !email.contains('.')) {
                                       return 'Please enter a valid email';
                                     }
-                                    if (!users.containsKey(email)) {
-                                      return 'This email is not registered';
-                                    }
+
                                     return null;
                                   },
                                   decoration: InputDecoration(
@@ -179,14 +206,7 @@ class _LoginState extends State<Login> {
                                     if (password == null || password.isEmpty) {
                                       return 'Please enter your password';
                                     }
-                                    if (users.containsKey(
-                                        _loginemailController.text)) {
-                                      if (users[_loginemailController.text]
-                                              ?['password'] !=
-                                          password) {
-                                        return 'Incorrect password';
-                                      }
-                                    }
+
                                     return null;
                                   },
                                   decoration: InputDecoration(
@@ -244,8 +264,10 @@ class _LoginState extends State<Login> {
                                       const SizedBox(height: 20),
                                       ElevatedButton(
                                         onPressed: () {
-                                          _login(_loginemailController.text,
-                                              _loginpasswordController.text);
+                                          print(
+                                              "Login button: Attempting to login with email: ${_loginemailController.text} and password: ${_loginpasswordController.text}");
+
+                                          _login();
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color.fromARGB(
@@ -256,14 +278,17 @@ class _LoginState extends State<Login> {
                                                 15.0), // Reduce the border radius to 15
                                           ),
                                         ),
-                                        child: Text(
-                                          'Login',
-                                          style: GoogleFonts.raleway(
-                                              color: const Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.normal),
-                                        ),
+                                        child: _isLoading
+                                            ? const CircularProgressIndicator()
+                                            : Text(
+                                                'Login',
+                                                style: GoogleFonts.raleway(
+                                                    color: const Color.fromARGB(
+                                                        255, 255, 255, 255),
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
                                       ),
                                     ],
                                   ),

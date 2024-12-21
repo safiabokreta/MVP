@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zefeffete/data/datasources/account_ds.dart';
+import 'package:zefeffete/data/datasources/vendor_ds.dart';
+import 'package:zefeffete/data/datasources/venue_owner_ds.dart';
+import 'package:zefeffete/data/datasources/wedding_owner_ds.dart';
+import 'package:zefeffete/data/repositories/account_rep_impl.dart';
+import 'package:zefeffete/data/repositories/vendor_rep_impl.dart';
+import 'package:zefeffete/data/repositories/venue_owner_rep_impl.dart';
+import 'package:zefeffete/data/repositories/wedding_owner_rep_impl.dart';
+import 'package:zefeffete/domain/usecases/account/account_usecases.dart';
+import 'package:zefeffete/domain/usecases/vendors/vendor_usecases.dart';
+import 'package:zefeffete/domain/usecases/venue_owner/venue_owner_usecase.dart';
+import 'package:zefeffete/domain/usecases/wedding_owner_usecases.dart';
+import 'package:zefeffete/presentation/controllers/account_signup_controller.dart';
+import 'package:zefeffete/presentation/controllers/user_account_controller.dart';
+import 'package:zefeffete/presentation/controllers/vendor_controller.dart';
+import 'package:zefeffete/presentation/controllers/venue_owner.dart';
+import 'package:zefeffete/presentation/controllers/wedding_owner_controller.dart';
 import 'package:zefeffete/presentation/views/screens/auth/login.dart';
 import 'package:zefeffete/presentation/views/screens/auth/privacypolicy.dart';
 import 'package:zefeffete/data_to_be_deleted/users.dart';
+import 'package:zefeffete/presentation/views/screens/profile/profile.dart';
 
 class Signup extends StatefulWidget {
   static const String pageroute = '/signup';
@@ -13,7 +31,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  String role = 'weddingowner';
+  String role = 'wedding_owner';
   bool _isCheckboxError = false; // Track checkbox validation error
   bool _isAgreed = false; // Track whether the checkbox is checked
   final _emailController = TextEditingController();
@@ -22,46 +40,46 @@ class _SignupState extends State<Signup> {
   final GlobalKey<FormState> _signupFormKey = GlobalKey<FormState>();
   bool isObscuresignup = true;
 
-  void addUser(String email, String password) {
-    // Check if the email already exists
-    if (users.containsKey(email)) {
-      // ignore: avoid_print
-      print('User with this email already exists.');
-      return;
-    }
-    // Generate a name from the email
-    String generatedName = email.split('@')[0]; // Get the part before '@'
-    List<String> parts = generatedName.split('.'); // Split by '.' if present
-    generatedName = parts
-        .map((part) => part[0].toUpperCase() + part.substring(1))
-        .join(' '); // Capitalize each part
-    // Add the user to the map
-    users[email] = {
-      'name': generatedName,
-      'nickname': generatedName,
-      'password': password,
-      'role': role,
-    };
-    // ignore: avoid_print
-    print('User added successfully: $generatedName');
-  }
+  final SignupController _signupController = SignupController(
+    accountcontroller: AccountController(AccountUserCases(AccountRepositoryImpl(
+        AccountDataSource()))), // Implement your account repository
+    weddingOwnerController: WeddingOwnerController(WeddingOwnerUseCases(
+        WeddingOwnerRepositoryImpl(WeddingOwnerDataSource()))),
+    venueOwnerController: VenueOwnerController(
+        VenueOwnerUseCases(VenueOwnerRepositoryImpl(VenueOwnerDataSource()))),
+    vendorController: VendorController(
+        VendorUseCases(VendorRepositoryImpl(VendorDataSource()))),
+  );
 
-  void _register() {
+  void _register() async {
     if (_signupFormKey.currentState?.validate() ?? false) {
-      addUser(_emailController.text, _passwordController.text);
-      // ignore: avoid_print
-      print('Registration successful');
-      Navigator.pushNamed(context, Login.pageroute,
-          arguments: _emailController.text);
-    }
-    setState(() {
-      _isCheckboxError = !_isAgreed;
-    });
+      print("signup form validation state here");
+      print("current role is$role");
+      final result = await _signupController.signup(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _emailController.text.split('@')[0],
+        profilePicture: null, // Make profilePicture optional
+        role: role,
+      );
 
-    if (!_isAgreed ||
-        _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty) {
-      return;
+      setState(() {
+        _isCheckboxError = !_isAgreed;
+      });
+
+      if (!_isAgreed ||
+          _emailController.text.isEmpty ||
+          _passwordController.text.isEmpty) {
+        return;
+      }
+      if (result == "Signup successful") {
+        // ignore: avoid_print
+        print('Registration successful');
+        Navigator.pushNamed(context, Profile.pageroute);
+      } else {
+        // ignore: avoid_print
+        print('Registration failed');
+      }
     }
   }
 
@@ -318,8 +336,12 @@ class _SignupState extends State<Signup> {
                                                       isObscuresignup
                                                           ? Icons.visibility_off
                                                           : Icons.visibility,
-                                                      color: Color.fromARGB(
-                                                          255, 123, 123, 123),
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              123,
+                                                              123,
+                                                              123),
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
@@ -364,7 +386,7 @@ class _SignupState extends State<Signup> {
                                                 ),
                                                 items: const [
                                                   DropdownMenuItem<String>(
-                                                    value: 'weddingowner',
+                                                    value: 'wedding_owner',
                                                     child: SizedBox(
                                                       width: 100,
                                                       child: Text(
@@ -395,7 +417,7 @@ class _SignupState extends State<Signup> {
                                                     ),
                                                   ),
                                                   DropdownMenuItem<String>(
-                                                    value: 'venue',
+                                                    value: 'venue_owner',
                                                     child: SizedBox(
                                                       width:
                                                           100, // Adjust width to fit content
@@ -413,8 +435,8 @@ class _SignupState extends State<Signup> {
                                                 ],
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    role =
-                                                        value ?? 'weddingowner';
+                                                    role = value ??
+                                                        'wedding_owner';
                                                   });
                                                 },
                                                 style: const TextStyle(
@@ -500,6 +522,7 @@ class _SignupState extends State<Signup> {
                                                 children: [
                                                   ElevatedButton(
                                                     onPressed: () {
+                                                      print("button here!");
                                                       _register();
                                                     },
                                                     style: ElevatedButton

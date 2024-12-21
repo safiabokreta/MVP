@@ -4,4 +4,5 @@ abstract class VenueOwnerRepository {
   Future<void> insertVenueOwner(VenueOwnerModel venueOwnerModel);
   Future<VenueOwnerModel?> getVenueOwnerByEmail(String email);
   Future<void> deleteVenueOwner(String email);
+  Future<void> updateGender(String email, String gender);
 }

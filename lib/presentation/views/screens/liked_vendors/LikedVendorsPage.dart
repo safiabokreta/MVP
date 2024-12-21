@@ -32,6 +32,7 @@ class LikedVendorsPage extends StatelessWidget {
                       location: '${vendor['location']}',
                       imageUrl: vendor['imageUrl'],
                       onTap: () {
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -39,7 +40,7 @@ class LikedVendorsPage extends StatelessWidget {
                               vendorId: vendor["id"],
                             ),
                           ),
-                        );
+                        );*/
                       },
                       isLiked: true,
                       onLike: () {},

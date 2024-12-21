@@ -2,18 +2,13 @@ import 'package:zefeffete/domain/entities/account.dart';
 
 class AccountModel extends Account {
   AccountModel({
-    required String email,
-    required String password,
-    required String username,
-    String? profilePicture,
-    required String role,
-  }) : super(
-          email: email,
-          password: password,
-          username: username,
-          profilePicture: profilePicture,
-          role: role,
-        );
+    required super.email,
+    required super.password,
+    required super.username,
+    super.profilePicture,
+    super.theme,
+    required super.role,
+  });
 
   // Convert Model to Entity
   Account toEntity() {
@@ -22,6 +17,7 @@ class AccountModel extends Account {
       password: password,
       username: username,
       profilePicture: profilePicture,
+      theme: theme,
       role: role,
     );
   }
@@ -32,6 +28,7 @@ class AccountModel extends Account {
       'password': password,
       'username': username,
       'profile_picture': profilePicture,
+      'theme': theme,
       'role': role,
     };
   }
@@ -42,6 +39,7 @@ class AccountModel extends Account {
       password: map['password'],
       username: map['username'],
       profilePicture: map['profile_picture'],
+      theme: map['theme'],
       role: map['role'],
     );
   }

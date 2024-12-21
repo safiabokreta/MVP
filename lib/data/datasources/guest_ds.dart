@@ -1,22 +1,71 @@
 import 'package:zefeffete/data/models/guest_model.dart';
+import 'package:sqflite/sqflite.dart';
+import '../db/db_helper.dart';
 
 class GuestDataSource {
-  Future<void> insertGuest(GuestModel guestModel) async {
-    // Placeholder for SQL insertion logic for a guest
+  static Future<List<Map<String, dynamic>>> getAllGuests() async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    return await db.query('guest');
   }
 
-  Future<GuestModel?> getGuestById(int guestId) async {
-    // Placeholder for SQL fetch logic to get a guest by ID
-    return null; // Placeholder return
+  static Future<List<Map<String, dynamic>>> getGuestsByWeddingOwner(
+      String email) async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    return await db.query(
+      'guest',
+      where: 'wedding_owner_email = ?',
+      whereArgs: [email],
+    );
   }
 
-  Future<List<GuestModel>> getGuestsByWeddingOwnerEmail(
-      String weddingOwnerEmail) async {
-    // Placeholder for SQL fetch logic to get all guests by wedding owner email
-    return []; // Placeholder return
+  static Future<Map<String, dynamic>?> getGuestById(int guestId) async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    final result = await db.query(
+      'guest',
+      where: 'guest_id = ?',
+      whereArgs: [guestId],
+    );
+    return result.isNotEmpty ? result.first : null;
   }
 
-  Future<void> deleteGuest(int guestId) async {
-    // Placeholder for SQL deletion logic for a guest by ID
+  static Future<int> addGuest(Map<String, dynamic> guestData) async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+
+    // Create a new map without modifying the original map
+    final cleanedGuestData = Map<String, dynamic>.from(guestData);
+
+    // Ensure 'guest_id' is removed to allow auto-increment
+    cleanedGuestData.remove('guest_id');
+
+    print(cleanedGuestData); // Debug print to confirm 'guest_id' is removed
+
+    // Insert the cleaned data into the 'guest' table
+    return await db.insert('guest', cleanedGuestData);
+  }
+
+  static Future<int> updateGuest(
+      int guestId, Map<String, dynamic> updatedData) async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    return await db.update(
+      'guest',
+      updatedData,
+      where: 'guest_id = ?',
+      whereArgs: [guestId],
+    );
+  }
+
+  static Future<int> deleteGuest(int guestId) async {
+    final dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    return await db.delete(
+      'guest',
+      where: 'guest_id = ?',
+      whereArgs: [guestId],
+    );
   }
 }

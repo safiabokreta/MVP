@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class GenderSelection extends StatefulWidget {
-  const GenderSelection({super.key});
+  const GenderSelection({super.key, required this.onGenderChanged});
+
+  final Function(String) onGenderChanged;
 
   @override
   _GenderSelectionState createState() => _GenderSelectionState();
@@ -34,6 +36,7 @@ class _GenderSelectionState extends State<GenderSelection> {
                 setState(() {
                   selectedGender = gender;
                 });
+                widget.onGenderChanged(gender); // Notify parent widget
               },
               child: Container(
                 padding:

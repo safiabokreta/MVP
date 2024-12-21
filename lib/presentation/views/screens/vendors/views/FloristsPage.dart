@@ -11,7 +11,7 @@ class FloristsPage extends StatelessWidget {
           padding: EdgeInsets.only(top: 25, bottom: 20), child: AppSearchBar()),
       Center(
         child: Text(
-          "Florists Section",
+          " No Florists available",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),

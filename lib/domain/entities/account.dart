@@ -5,6 +5,7 @@ class Account {
   final String password;
   final String username;
   final String? profilePicture;
+  final String? theme;
   final String role;
 
   Account({
@@ -12,6 +13,7 @@ class Account {
     required this.password,
     required this.username,
     this.profilePicture,
+    this.theme,
     required this.role,
   });
 
@@ -22,6 +24,7 @@ class Account {
       password: password,
       username: username,
       profilePicture: profilePicture,
+      theme: theme,
       role: role,
     );
   }

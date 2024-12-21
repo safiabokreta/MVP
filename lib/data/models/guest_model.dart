@@ -2,17 +2,17 @@ import 'package:zefeffete/domain/entities/guest.dart';
 
 class GuestModel extends Guest {
   GuestModel({
-    required int guestId,
-    required String weddingOwnerEmail,
+    String? weddingOwnerEmail,
     String? name,
     String? gender,
     String? side,
     int numWomen = 0,
     int numMen = 0,
     int numKids = 0,
+    int? guestId, // Optional since it's auto-incremented
   }) : super(
-          guestId: guestId,
-          weddingOwnerEmail: weddingOwnerEmail,
+          guestId: guestId ?? 0,
+          weddingOwnerEmail: weddingOwnerEmail ?? '',
           name: name,
           gender: gender,
           side: side,
@@ -36,8 +36,7 @@ class GuestModel extends Guest {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'guest_id': guestId,
+    final map = {
       'wedding_owner_email': weddingOwnerEmail,
       'name': name,
       'gender': gender,
@@ -46,6 +45,10 @@ class GuestModel extends Guest {
       'num_men': numMen,
       'num_kids': numKids,
     };
+    if (guestId != null) {
+      map['guest_id'] = guestId; // Include only if ID is present
+    }
+    return map;
   }
 
   static GuestModel fromMap(Map<String, dynamic> map) {

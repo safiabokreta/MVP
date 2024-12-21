@@ -2,12 +2,9 @@ import 'package:zefeffete/domain/entities/weddingOwner.dart';
 
 class WeddingOwnerModel extends WeddingOwner {
   WeddingOwnerModel({
-    required String email,
-    String? weddingDate,
-  }) : super(
-          email: email,
-          weddingDate: weddingDate,
-        );
+    required super.email,
+    super.weddingDate,
+  });
 
   // Convert Model to Entity
   WeddingOwner toEntity() {

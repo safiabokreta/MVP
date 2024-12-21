@@ -99,10 +99,10 @@ class _OnboardingPagesState extends State<OnboardingPages> {
                       bottom: 50,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             const Color.fromARGB(255, 235, 118, 157),
                           ),
-                          shape: MaterialStateProperty.all(
+                          shape: WidgetStateProperty.all(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(13),
                             ),
@@ -133,10 +133,10 @@ class _OnboardingPagesState extends State<OnboardingPages> {
               child: SmoothPageIndicator(
                 controller: controller,
                 count: 3,
-                effect: WormEffect(
+                effect: const WormEffect(
                   dotHeight: 10,
                   dotWidth: 10,
-                  activeDotColor: const Color.fromARGB(255, 235, 118, 157),
+                  activeDotColor: Color.fromARGB(255, 235, 118, 157),
                 ),
               ),
             ),

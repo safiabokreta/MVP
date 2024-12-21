@@ -11,7 +11,7 @@ class DJsPage extends StatelessWidget {
           padding: EdgeInsets.only(top: 25, bottom: 20), child: AppSearchBar()),
       Center(
         child: Text(
-          "DJs Section",
+          "No DJs available",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),

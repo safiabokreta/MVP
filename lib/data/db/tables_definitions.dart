@@ -5,6 +5,7 @@ final List<String> createTableScripts = [
       password TEXT NOT NULL,
       username TEXT NOT NULL,
       profile_picture TEXT,
+      theme TEXT,
       role TEXT NOT NULL 
   );
   ''',
@@ -91,7 +92,6 @@ final List<String> createTableScripts = [
       price_min REAL,
       price_max REAL,
       pricing_details TEXT,
-      theme TEXT,
       activated BOOLEAN DEFAULT 0,
       category Text,
       FOREIGN KEY (email) REFERENCES account (email),

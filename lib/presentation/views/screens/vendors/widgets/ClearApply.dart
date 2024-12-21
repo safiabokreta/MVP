@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class ClearApply extends StatelessWidget {
-  const ClearApply({super.key});
+  final VoidCallback onClear; // Callback function for "Clear"
+  final VoidCallback onApply; // Callback function for "Apply"
+
+  const ClearApply({
+    super.key,
+    required this.onClear,
+    required this.onApply,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,7 @@ class ClearApply extends StatelessWidget {
             height: 40,
             width: 170,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: onClear, // Call the onClear callback
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.secondary2,
                 shape: RoundedRectangleBorder(
@@ -35,9 +42,7 @@ class ClearApply extends StatelessWidget {
             height: 40,
             width: 170,
             child: ElevatedButton(
-              onPressed: () {
-                // Action for "Apply"
-              },
+              onPressed: onApply, // Call the onApply callback
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary2,
                 shape: RoundedRectangleBorder(

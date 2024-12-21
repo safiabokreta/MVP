@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:zefeffete/presentation/views/screens/profile/changemail.dart';
 import 'package:zefeffete/presentation/views/screens/profile/changenumber.dart';
 import 'package:zefeffete/presentation/views/screens/profile/changepassword.dart';
-import 'package:zefeffete/presentation/views/screens/auth/login.dart';
 
 class Security extends StatefulWidget {
   static const String pageroute = '/security';
@@ -91,47 +90,7 @@ class _SecurityState extends State<Security> {
                   const SizedBox(height: 16),
 
                   // Log out section
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Log out',
-                          style: GoogleFonts.poppins(
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text('Log out of the app'),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, Login.pageroute,
-                                arguments: currentUserEmail);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 235, 118, 157),
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          child: Text(
-                            'Log out',
-                            style: GoogleFonts.roboto(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                 const SizedBox(height: 16),
 
                   // Delete account section
                   Container(

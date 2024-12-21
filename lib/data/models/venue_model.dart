@@ -2,26 +2,16 @@ import 'package:zefeffete/domain/entities/venue.dart';
 
 class VenueModel extends Venue {
   VenueModel({
-    required int id,
-    required String name,
-    required String city,
-    required String wilaya,
-    String? about,
-    required double priceMin,
-    required double priceMax,
-    required String pricingDetails,
-    required String venueOwnerEmail,
-  }) : super(
-          id: id,
-          name: name,
-          city: city,
-          wilaya: wilaya,
-          about: about,
-          priceMin: priceMin,
-          priceMax: priceMax,
-          pricingDetails: pricingDetails,
-          venueOwnerEmail: venueOwnerEmail,
-        );
+    required super.id,
+    required super.name,
+    required super.city,
+    required super.wilaya,
+    super.about,
+    required super.priceMin,
+    required super.priceMax,
+    required super.pricingDetails,
+    required super.venueOwnerEmail,
+  });
 
   // Convert Model to Entity
   Venue toEntity() {
