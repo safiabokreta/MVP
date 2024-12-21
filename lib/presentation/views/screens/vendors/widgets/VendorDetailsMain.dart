@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:zefeffete/domain/entities/vendor.dart'; // Assuming this is the correct path
 import 'PhotosGrid.dart';
-import 'PricingPackage.dart';
 
 class VendorDetailsMain extends StatelessWidget {
-  final Map<String, dynamic> vendorData;
+  final Vendor vendorData; // Now using Vendor entity
 
   const VendorDetailsMain({required this.vendorData, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return VendorDetails(data: vendorData);
+    return VendorDetails(vendor: vendorData); // Passing Vendor entity
   }
 }
 
 class VendorDetails extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Vendor vendor; // Now using Vendor entity
 
-  const VendorDetails({required this.data, super.key});
+  const VendorDetails({required this.vendor, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,8 @@ class VendorDetails extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            data['about'],
+            vendor.about ??
+                'No description available', // Use vendor's about field
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 20),
@@ -40,30 +41,21 @@ class VendorDetails extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          ...data['pricingDetails'].map<Widget>((package) {
-            return PricingPackage(
-              title: package['title'],
-              price: package['price'],
-              details: package['details'],
-            );
-          }).toList(),
-          const SizedBox(height: 10),
-          const Text(
-            'Additional Costs',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 5),
           Text(
-            'Travel Fee: ${data['additionalCosts']['travelFee']}\nExtra Staff: ${data['additionalCosts']['extraStaff']}',
+            vendor.pricingDetails ??
+                'No pricing details available', // Simple text field
             style: const TextStyle(fontSize: 16),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           const Text(
             'Photos',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          PhotosGrid(images: List<String>.from(data['photos'])),
+          // Using vendor's image URLs
+          PhotosGrid(
+              images:
+                  vendor.images ?? []), // If images is null, pass empty list
         ],
       ),
     );

@@ -6,7 +6,9 @@ import 'ButtonSection.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class LeaveReview extends StatefulWidget {
-  const LeaveReview({super.key});
+  final String email;
+
+  const LeaveReview({required this.email, super.key});
 
   @override
   _LeaveReviewModalState createState() => _LeaveReviewModalState();
@@ -93,6 +95,9 @@ class _LeaveReviewModalState extends State<LeaveReview> {
                       ),
                     );
                   } else {
+                    // Here you can use `widget.email` for backend submission
+                    print("Email: ${widget.email}, Rating: $_selectedRating");
+
                     // Close modal and show rating confirmation
                     Navigator.of(context).pop();
                     showDialog(

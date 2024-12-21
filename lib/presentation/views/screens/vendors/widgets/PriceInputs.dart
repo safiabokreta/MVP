@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class PriceInputs extends StatefulWidget {
-  const PriceInputs({super.key});
+  const PriceInputs({super.key, required this.onPriceChanged});
+
+  final Function(double?, double?) onPriceChanged;
 
   @override
   _PriceInputsState createState() => _PriceInputsState();
@@ -23,8 +25,7 @@ class _PriceInputsState extends State<PriceInputs> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize
-          .min, // Ensure the column only takes as much space as needed
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
           'Price',
@@ -34,11 +35,8 @@ class _PriceInputsState extends State<PriceInputs> {
             color: Colors.black,
           ),
         ),
-        const SizedBox(
-            height: 8), // Smaller spacing between label and input fields
+        const SizedBox(height: 8),
         Row(
-          mainAxisSize: MainAxisSize
-              .min, // Ensure row only takes as much space as its children
           children: [
             Expanded(
               child: Container(
@@ -58,10 +56,16 @@ class _PriceInputsState extends State<PriceInputs> {
                     ),
                   ),
                   keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    widget.onPriceChanged(
+                      double.tryParse(value),
+                      double.tryParse(_maxPriceController.text),
+                    );
+                  },
                 ),
               ),
             ),
-            const SizedBox(width: 8), // Reduced spacing between input fields
+            const SizedBox(width: 8),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -80,6 +84,12 @@ class _PriceInputsState extends State<PriceInputs> {
                     ),
                   ),
                   keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    widget.onPriceChanged(
+                      double.tryParse(_minPriceController.text),
+                      double.tryParse(value),
+                    );
+                  },
                 ),
               ),
             ),

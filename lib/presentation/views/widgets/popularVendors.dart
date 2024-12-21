@@ -117,15 +117,15 @@ class _PopularVendorsState extends State<PopularVendors> {
       String location, double rating, String path) {
     return GestureDetector(
       onTap: () {
-        final vendor = vendors[0];
+        /*final vendor = vendors[0];
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ProfileScreen(
-              vendorId: vendor["id"],
+              vendorEmail: vendor["id"],
             ),
           ),
-        );
+        );*/
       },
       child: Card(
         elevation: 0,

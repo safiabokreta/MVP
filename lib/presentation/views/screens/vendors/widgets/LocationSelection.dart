@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class LocationSelection extends StatefulWidget {
-  const LocationSelection({super.key});
+  final Function(Map<String, List<String>>) onLocationChanged;
+
+  const LocationSelection({super.key, required this.onLocationChanged});
 
   @override
   _LocationSelectionState createState() => _LocationSelectionState();
 }
 
 class _LocationSelectionState extends State<LocationSelection> {
-  Map<String, List<String>> wilayas = {};
-  String? selectedWilaya;
-  final Map<String, List<String>> selectedCommunes = {};
+  Map<String, List<String>> wilayas = {}; // Holds Wilaya to Communes mapping
+  String? selectedWilaya; // Currently selected Wilaya
+  final Map<String, List<String>> selectedCommunes =
+      {}; // Holds selected communes for each Wilaya
 
   @override
   void initState() {
@@ -21,17 +24,37 @@ class _LocationSelectionState extends State<LocationSelection> {
   }
 
   Future<void> _loadWilayaData() async {
-    // Load the JSON file from assets
     final String jsonString =
         await rootBundle.loadString('assets/wilayas.json');
     final Map<String, dynamic> jsonData = json.decode(jsonString);
 
-    // Convert to Map<String, List<String>>
     setState(() {
       wilayas = jsonData.map((key, value) {
         return MapEntry(key, List<String>.from(value));
       });
     });
+  }
+
+  // Function to toggle the selection of all communes
+  void _toggleSelectAll(String wilaya) {
+    setState(() {
+      if (selectedCommunes[wilaya]?.length == wilayas[wilaya]?.length) {
+        // If all communes are selected, deselect them
+        selectedCommunes[wilaya]?.clear();
+      } else {
+        // If not all are selected, select all
+        selectedCommunes[wilaya] = List.from(wilayas[wilaya]!);
+      }
+    });
+    _updateSelectedLocations(); // Update the parent with the new selected locations
+  }
+
+  // Function to update the parent with selected locations (now a map)
+  void _updateSelectedLocations() {
+    // Remove any wilayas that have no communes selected
+    selectedCommunes.removeWhere((key, value) => value.isEmpty);
+    widget.onLocationChanged(
+        selectedCommunes); // Notify parent with selected locations map
   }
 
   @override
@@ -41,18 +64,16 @@ class _LocationSelectionState extends State<LocationSelection> {
       child: wilayas.isEmpty
           ? const Center(
               child:
-                  CircularProgressIndicator(), // Show loader until data is loaded
-            )
+                  CircularProgressIndicator()) // Show loader until data is loaded
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Location',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 DropdownButton<String>(
@@ -79,10 +100,9 @@ class _LocationSelectionState extends State<LocationSelection> {
                 const Text(
                   'Select Communes',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
@@ -95,35 +115,58 @@ class _LocationSelectionState extends State<LocationSelection> {
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(entry.key),
+                              Text(entry.key), // Wilaya name
                               IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
-                                    selectedCommunes.remove(entry.key);
+                                    selectedCommunes
+                                        .remove(entry.key); // Remove the Wilaya
                                   });
+                                  _updateSelectedLocations(); // Update the parent with the change
                                 },
                               ),
                             ],
                           ),
-                          children: wilayas[entry.key]!.map((commune) {
-                            return CheckboxListTile(
-                              title: Text(commune),
-                              value: entry.value.contains(commune),
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == true) {
-                                    entry.value.add(commune);
-                                  } else {
-                                    entry.value.remove(commune);
-                                  }
-                                });
+                          children: [
+                            // "Select All" option
+                            ListTile(
+                              title: Text('Select All'),
+                              trailing: Icon(
+                                selectedCommunes[entry.key]?.length ==
+                                        wilayas[entry.key]?.length
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                color: Colors.pink, // Set the color to pink
+                              ),
+                              onTap: () {
+                                _toggleSelectAll(entry
+                                    .key); // Toggle the selection of all communes
                               },
-                            );
-                          }).toList(),
+                            ),
+                            // List of individual communes
+                            ...wilayas[entry.key]!.map((commune) {
+                              return CheckboxListTile(
+                                title: Text(commune),
+                                value: entry.value.contains(commune),
+                                activeColor:
+                                    Colors.pink, // Set checkbox color to pink
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    if (value == true) {
+                                      entry.value.add(
+                                          commune); // Add commune to selected list
+                                    } else {
+                                      entry.value.remove(
+                                          commune); // Remove commune from selected list
+                                    }
+                                  });
+                                  _updateSelectedLocations(); // Update the parent with the change
+                                },
+                              );
+                            }).toList(),
+                          ],
                         ),
                       );
                     }).toList(),

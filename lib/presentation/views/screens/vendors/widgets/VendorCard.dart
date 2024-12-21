@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VendorCard extends StatefulWidget {
   final String name;
@@ -28,6 +29,22 @@ class VendorCard extends StatefulWidget {
 }
 
 class _VendorCardState extends State<VendorCard> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -100,18 +117,45 @@ class _VendorCardState extends State<VendorCard> {
                   widget.isLiked ? Icons.favorite : Icons.favorite_border,
                   color: AppColors.primary4,
                 ),
-                onPressed: () {
-                  if (widget.isLiked) {
-                    widget.onUnlike(); // Call onUnlike if already liked
-                  } else {
-                    widget.onLike(); // Call onLike if not liked
-                  }
-                },
+                onPressed: _isLoggedIn
+                    ? () {
+                        if (widget.isLiked) {
+                          widget.onUnlike(); // Call onUnlike if already liked
+                        } else {
+                          widget.onLike(); // Call onLike if not liked
+                        }
+                      }
+                    : () {
+                        // Show a dialog or message to inform the user to log in
+                        _showLoginPrompt(context);
+                      },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showLoginPrompt(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.secondary1,
+          title: const Text("Login Required"),
+          content: const Text("You need to log in to like a vendor."),
+          actions: [
+            TextButton(
+              child:
+                  const Text("OK", style: TextStyle(color: AppColors.primary4)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

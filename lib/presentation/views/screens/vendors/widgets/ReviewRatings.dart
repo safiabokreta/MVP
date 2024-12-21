@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:zefeffete/presentation/views/themes/simpleStyle.dart/colors.dart';
 
 class ReviewRatings extends StatefulWidget {
-  const ReviewRatings({super.key});
+  const ReviewRatings({super.key, required this.onRatingChanged});
+
+  final Function(String) onRatingChanged;
 
   @override
   _ReviewRatingsState createState() => _ReviewRatingsState();
 }
 
 class _ReviewRatingsState extends State<ReviewRatings> {
-  String _selectedRating = '4.5 and above';
+  String _selectedRating = '4.5-5';
 
   final List<Map<String, String>> _ratings = [
-    {'label': '4.5 and above', 'value': '4.5 and above'},
-    {'label': '4.0-4.5', 'value': '4.0-4.5'},
-    {'label': '3.5-4.0', 'value': '3.5-4.0'},
-    {'label': '3.0-3.5', 'value': '3.0-3.5'},
-    {'label': '2.5-3.0', 'value': '2.5-3.0'},
-    {'label': '2.0-2.5', 'value': '2.0-2.5'},
-    {'label': '2.0 and less', 'value': '2.0 and less'},
+    {'label': '4.5-5', 'value': '4.5'},
+    {'label': '4.0-5', 'value': '4.0'},
+    {'label': '3.5-5', 'value': '3.5'},
+    {'label': '3.0-5', 'value': '3.0'},
+    {'label': '2.5-5', 'value': '2.5'},
+    {'label': '2.0-5', 'value': '2.0'},
+    {'label': '2.0 and less', 'value': '0'},
   ];
 
   @override
@@ -39,9 +41,9 @@ class _ReviewRatingsState extends State<ReviewRatings> {
           data: RadioThemeData(
             fillColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.selected)) {
-                return AppColors.primary4; // Active color
+                return AppColors.primary4;
               }
-              return AppColors.primary4; // Inactive color
+              return AppColors.primary4;
             }),
           ),
           child: Column(
@@ -68,6 +70,7 @@ class _ReviewRatingsState extends State<ReviewRatings> {
                       setState(() {
                         _selectedRating = value!;
                       });
+                      widget.onRatingChanged(value!); // Notify parent widget
                     },
                   ),
                 ),
